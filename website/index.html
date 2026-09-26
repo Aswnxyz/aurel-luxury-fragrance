@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AUREL | Eau de Parfum | Composed in shadow, worn in light.</title>
+    <meta
+      name="description"
+      content="AUREL is a Paris fragrance house of three eaux de parfum: Élan for daylight, Noctis for night, Sombre for the hours in between. 18% concentration, 100 ml, made to be kept."
+    />
+    <meta name="theme-color" content="#0E0A07" />
+    <meta name="color-scheme" content="dark" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="AUREL | Composed in shadow, worn in light." />
+    <meta
+      property="og:description"
+      content="Three eaux de parfum, 18% concentration, 100 ml. Élan, Noctis, Sombre."
+    />
+    <meta property="og:image" content="./img/ending.jpg" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230E0A07'/%3E%3Crect x='2' y='2' width='60' height='60' rx='12' fill='none' stroke='%23C9A24B' stroke-opacity='.45'/%3E%3Cpath d='M32 16 46 32 32 48 18 32Z' fill='none' stroke='%23C9A24B' stroke-width='3'/%3E%3Cpath d='M32 26 38 32 32 38 26 32Z' fill='%23C9A24B'/%3E%3C/svg%3E"
+    />
+    <script>
+      // Set before first paint so entrance states never flash unstyled text
+      // when the module below fails to load.
+      document.documentElement.classList.add("js");
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <video
+      id="bgv"
+      class="bg-video"
+      muted
+      playsinline
+      preload="none"
+      aria-hidden="true"
+      tabindex="-1"
+    ></video>
+    <div class="mobile-poster" aria-hidden="true"></div>
+    <div class="bg-tint" aria-hidden="true"></div>
+    <div class="motion-glow" aria-hidden="true"></div>
+
+    <div class="scroll-rail" aria-hidden="true">
+      <span class="scroll-rail__marker"></span>
+    </div>
+
+    <header class="nav" id="nav">
+      <a class="nav__mark" href="#top" aria-label="AUREL, back to top">AUREL</a>
+      <nav class="nav__links" aria-label="Primary">
+        <a href="#composition">Composition</a>
+        <a href="#flacon">Flacon</a>
+        <a href="#collection">Collection</a>
+        <a href="#specs">Specifications</a>
+      </nav>
+      <a class="btn btn--ghost btn--sm" href="#contact">Enquire</a>
+    </header>
+
+    <main id="page">
+      <a id="top"></a>
+
+      <!-- 1. HERO -->
+      <section class="hero" id="hero">
+        <div class="hero__inner">
+          <p class="chip">Maison AUREL &middot; Paris</p>
+          <h1 class="hero__mark" aria-label="AUREL">
+            <span>A</span><span>U</span><span>R</span><span>E</span><span>L</span>
+          </h1>
+          <p class="hero__slogan">Composed in shadow, worn in light.</p>
+          <p class="hero__statement">
+            Three eaux de parfum, made in small numbered batches and sold at one
+            price. Nothing added for volume. Nothing added for show.
+          </p>
+          <div class="hero__cta">
+            <a class="btn btn--primary" href="#collection">See the collection</a>
+            <a class="btn btn--ghost" href="#contact">Enquire</a>
+          </div>
+        </div>
+        <div class="hero__cue" aria-hidden="true">
+          <span class="hero__cue-label">Scroll</span>
+          <span class="hero__cue-line"></span>
+        </div>
+      </section>
+
+      <!-- 2. IMPACT -->
+      <section class="impact" id="impact">
+        <div class="impact__pin">
+          <p class="impact__text" data-split>
+            A fragrance is not noticed. It is remembered. Hours after you have
+            left the room.
+          </p>
+        </div>
+      </section>
+
+      <!-- 3. COMPOSITION (Élan, the daylight chapter) -->
+      <section class="composition" id="composition">
+        <div class="composition__grid">
+          <div class="composition__copy reveal">
+            <p class="eyebrow">01 / The composition</p>
+            <h2 class="h2">Built in three movements.</h2>
+            <p class="lede">
+              Every AUREL opens, turns and stays the same way. Top notes for the
+              first minutes. Heart for the next two hours. Base for the rest of
+              the day. We publish the structure, because the structure is the
+              product.
+            </p>
+            <ul class="movements">
+              <li>
+                <span class="movements__k">Top</span>
+                <span class="movements__v">Bergamot, sea salt, fig leaf</span>
+              </li>
+              <li>
+                <span class="movements__k">Heart</span>
+                <span class="movements__v">Jasmine, orris, crushed stem</span>
+              </li>
+              <li>
+                <span class="movements__k">Base</span>
+                <span class="movements__v">Marine woods, cedar, white musk</span>
+              </li>
+            </ul>
+          </div>
+
+          <figure class="composition__figure reveal">
+            <picture>
+              <source
+                type="image/webp"
+                srcset="/img/elan.webp"
+                width="1536"
+                height="1024"
+              />
+              <img
+                src="/img/elan.jpg"
+                width="1536"
+                height="1024"
+                alt="AUREL Élan: a clear flacon with pale green-gold liquid and a marble and gold cap, on pale stone beside jasmine, driftwood and the sea in soft daylight."
+                loading="lazy"
+                decoding="async"
+              />
+            </picture>
+            <figcaption class="variant">
+              <span class="variant__name">AUREL Élan</span>
+              <span class="variant__line">The daylight expression</span>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <!-- 4. FLACON (Noctis) -->
+      <section class="flacon" id="flacon">
+        <div class="flacon__grid">
+          <figure class="flacon__figure reveal">
+            <picture>
+              <source
+                type="image/webp"
+                srcset="/img/noctis.webp"
+                width="1536"
+                height="1024"
+              />
+              <img
+                src="/img/noctis.jpg"
+                width="1536"
+                height="1024"
+                alt="AUREL Noctis: an amber liquid flacon with a sculpted gold cap on black marble, lit by candlelight with a moon behind it."
+                loading="lazy"
+                decoding="async"
+              />
+            </picture>
+            <figcaption class="variant variant--dark">
+              <span class="variant__name">AUREL Noctis</span>
+              <span class="variant__line">The night expression</span>
+            </figcaption>
+          </figure>
+
+          <div class="flacon__copy glass reveal">
+            <p class="eyebrow">02 / The flacon</p>
+            <h2 class="h2">Weighted glass. A collar you can feel.</h2>
+            <p class="lede">
+              100 ml in a squared flacon with a thick glass floor, so it sits
+              down when you set it down. A gold-plated brass collar. A cap that
+              finds its own seat on a magnet. A fine mist, 0.09 ml a pull,
+              enough to cover the collarbone once.
+            </p>
+            <dl class="parts">
+              <div class="parts__row">
+                <dt>Glass</dt>
+                <dd>Squared smoked flacon, weighted base</dd>
+              </div>
+              <div class="parts__row">
+                <dt>Collar</dt>
+                <dd>Gold-plated brass, brushed finish</dd>
+              </div>
+              <div class="parts__row">
+                <dt>Cap</dt>
+                <dd>Magnetic press fit, no thread</dd>
+              </div>
+              <div class="parts__row">
+                <dt>Atomiser</dt>
+                <dd>Fine mist, 0.09 ml per actuation</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. DESIGN & MATERIALS (full-bleed Sombre still) -->
+      <section class="materials" id="materials">
+        <div class="materials__media" data-parallax>
+          <img
+            src="/img/sombre2.jpg"
+            width="1536"
+            height="1024"
+            alt="The AUREL Sombre flacon tilted on wet black stone among red rose petals, vanilla pods, amber resin and drifting smoke."
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <div class="materials__scrim" aria-hidden="true"></div>
+        <div class="materials__copy reveal">
+          <p class="eyebrow">03 / Design and materials</p>
+          <h2 class="h2">Smoked glass, brushed gold, nothing else.</h2>
+          <p class="lede">
+            The bottle was drawn around the liquid, not the other way round.
+            Thick walls so the colour reads deep. A flat floor so it stands on a
+            wet shelf. Metal where the hand touches, glass everywhere else, and
+            a carton with no plastic in it.
+          </p>
+          <ul class="ticklist">
+            <li>Nine hundred numbered flacons per expression, then the run stops</li>
+            <li>Lacquered board carton, uncoated, no film, no insert plastic</li>
+            <li>Refills sold separately for the flacon you already own</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 6. COLLECTION (pinned gallery) -->
+      <section class="collection" id="collection">
+        <div class="collection__pin">
+          <div class="collection__head">
+            <p class="eyebrow">04 / The collection</p>
+            <h2 class="h2">Three expressions.</h2>
+            <p class="lede lede--short">
+              One house, three atmospheres. Same concentration, same flacon,
+              same price.
+            </p>
+            <div class="collection__progress" aria-hidden="true">
+              <span class="collection__count" data-count>01</span>
+              <span class="collection__of">/ 03</span>
+            </div>
+          </div>
+
+          <div class="collection__track" id="collection-track">
+            <article class="vcard glass" data-card>
+              <div class="vcard__media">
+                <picture>
+                  <source type="image/webp" srcset="/img/elan.webp" />
+                  <img
+                    src="/img/elan.jpg"
+                    alt="AUREL Élan flacon in daylight on pale stone beside jasmine and the sea."
+                    width="1536"
+                    height="1024"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </picture>
+              </div>
+              <div class="vcard__body">
+                <p class="vcard__index">I</p>
+                <h3 class="vcard__name">AUREL Élan</h3>
+                <p class="vcard__tag">The daylight expression</p>
+                <p class="vcard__desc">
+                  Salt air, jasmine and warm stone. Worn from breakfast to late
+                  afternoon.
+                </p>
+                <p class="vcard__notes">Bergamot &middot; Jasmine &middot; Marine woods</p>
+                <p class="vcard__price">100 ml <span>&euro;185</span></p>
+              </div>
+            </article>
+
+            <article class="vcard glass" data-card>
+              <div class="vcard__media">
+                <picture>
+                  <source type="image/webp" srcset="/img/noctis.webp" />
+                  <img
+                    src="/img/noctis.jpg"
+                    alt="AUREL Noctis flacon on black marble in candlelight with a moon behind."
+                    width="1536"
+                    height="1024"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </picture>
+              </div>
+              <div class="vcard__body">
+                <p class="vcard__index">II</p>
+                <h3 class="vcard__name">AUREL Noctis</h3>
+                <p class="vcard__tag">The night expression</p>
+                <p class="vcard__desc">
+                  Smoked amber, tonka and labdanum. Candlelight on dark marble.
+                </p>
+                <p class="vcard__notes">Cardamom &middot; Orris &middot; Labdanum</p>
+                <p class="vcard__price">100 ml <span>&euro;185</span></p>
+              </div>
+            </article>
+
+            <article class="vcard glass" data-card>
+              <div class="vcard__media">
+                <picture>
+                  <source type="image/webp" srcset="/img/sombre.webp" />
+                  <img
+                    src="/img/sombre.jpg"
+                    alt="AUREL Sombre flacon with oxblood liquid on black stone beside a red rose and drifting smoke."
+                    width="1536"
+                    height="1024"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </picture>
+              </div>
+              <div class="vcard__body">
+                <p class="vcard__index">III</p>
+                <h3 class="vcard__name">AUREL Sombre</h3>
+                <p class="vcard__tag">The shadow expression</p>
+                <p class="vcard__desc">
+                  Rose absolute, oud and black amber. The deepest of the three,
+                  and the one in the film above.
+                </p>
+                <p class="vcard__notes">Saffron &middot; Rose &middot; Oud</p>
+                <p class="vcard__price">100 ml <span>&euro;185</span></p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7. SPECS -->
+      <section class="specs" id="specs">
+        <div class="specs__inner">
+          <div class="specs__head reveal">
+            <p class="eyebrow">05 / Specifications</p>
+            <h2 class="h2">Everything on the label.</h2>
+            <p class="lede lede--short">
+              Printed on the box, repeated here, no asterisks.
+            </p>
+          </div>
+          <dl class="specs__list reveal">
+            <div class="specs__row"><dt>Concentration</dt><dd>18% aromatic compound</dd></div>
+            <div class="specs__row"><dt>Category</dt><dd>Eau de Parfum</dd></div>
+            <div class="specs__row"><dt>Volume</dt><dd>100 ml / 3.4 fl oz</dd></div>
+            <div class="specs__row"><dt>Wear</dt><dd>8 to 10 hours on skin</dd></div>
+            <div class="specs__row"><dt>Sillage</dt><dd>Close to moderate</dd></div>
+            <div class="specs__row"><dt>Bottle</dt><dd>Squared smoked glass, weighted base</dd></div>
+            <div class="specs__row"><dt>Collar</dt><dd>Gold-plated brass, brushed</dd></div>
+            <div class="specs__row"><dt>Cap</dt><dd>Magnetic press fit</dd></div>
+            <div class="specs__row"><dt>Run</dt><dd>900 numbered flacons per expression</dd></div>
+            <div class="specs__row"><dt>Origin</dt><dd>Composed and filled in France</dd></div>
+          </dl>
+        </div>
+      </section>
+
+      <!-- 8. CTA -->
+      <section class="cta" id="contact">
+        <div class="cta__grid">
+          <div class="cta__offer glass reveal">
+            <p class="eyebrow">Enquiries</p>
+            <h2 class="h2">Request the collection.</h2>
+            <p class="lede">
+              Tell us which expression you want, or ask for all three. We answer
+              every message ourselves, within two working days.
+            </p>
+            <div class="price">
+              <p class="price__label">Single flacon</p>
+              <p class="price__value">&euro;185</p>
+              <p class="price__unit">100 ml, any expression</p>
+            </div>
+            <div class="price price--alt">
+              <p class="price__label">The set of three</p>
+              <p class="price__value">&euro;525</p>
+              <p class="price__unit">Élan, Noctis and Sombre, boxed</p>
+            </div>
+          </div>
+
+          <form class="cta__form glass reveal" id="enquiry" novalidate>
+            <div class="field">
+              <label for="name">Name</label>
+              <input id="name" name="name" type="text" autocomplete="name" required />
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" autocomplete="email" required />
+            </div>
+            <div class="field">
+              <label for="expression">Expression</label>
+              <select id="expression" name="expression">
+                <option>AUREL Élan</option>
+                <option>AUREL Noctis</option>
+                <option>AUREL Sombre</option>
+                <option>The set of three</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" rows="4" required></textarea>
+            </div>
+            <button class="btn btn--primary btn--block" type="submit">Send enquiry</button>
+            <p class="form-note" id="form-note" role="status" aria-live="polite">
+              Your message opens in your mail app, addressed to
+              studio@aurel-parfums.com.
+            </p>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <!-- 9. FOOTER -->
+    <footer class="footer">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <p class="footer__mark">AUREL</p>
+          <p class="footer__slogan">Composed in shadow, worn in light.</p>
+        </div>
+        <div class="footer__col">
+          <p class="footer__h">House</p>
+          <a href="#composition">Composition</a>
+          <a href="#flacon">The flacon</a>
+          <a href="#collection">Collection</a>
+          <a href="#specs">Specifications</a>
+        </div>
+        <div class="footer__col">
+          <p class="footer__h">Contact</p>
+          <a href="mailto:studio@aurel-parfums.com">studio@aurel-parfums.com</a>
+          <a href="tel:+33184800000">+33 1 84 80 00 00</a>
+          <a href="https://instagram.com/aurel.parfums" rel="noopener noreferrer" target="_blank"
+            >Instagram</a
+          >
+          <span>12 Rue des Ombres, 75003 Paris</span>
+        </div>
+        <div class="footer__col">
+          <p class="footer__h">Hours</p>
+          <span>Tuesday to Saturday</span>
+          <span>11:00 to 19:00</span>
+        </div>
+      </div>
+      <div class="footer__base">
+        <span>&copy; 2026 AUREL. All rights reserved.</span>
+        <span class="footer__lozenge" aria-hidden="true"></span>
+        <span>Eau de Parfum &middot; 100 ml</span>
+      </div>
+    </footer>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

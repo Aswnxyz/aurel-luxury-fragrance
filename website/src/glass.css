@@ -1,0 +1,84 @@
+/* =========================================================================
+   AUREL - glass.css
+   Smoked-glass panels. The brand's visual language is smoked glass with warm
+   metallic edges, so every raised surface is a pane of it.
+   ========================================================================= */
+
+.glass {
+  position: relative;
+  overflow: hidden;
+  background: rgba(18, 19, 25, 0.46);
+  border: 1px solid color-mix(in srgb, var(--line) 75%, transparent);
+  backdrop-filter: blur(22px) saturate(1.18);
+  -webkit-backdrop-filter: blur(22px) saturate(1.18);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.32);
+  border-radius: 24px;
+}
+
+.glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.08),
+    transparent 38%,
+    rgba(var(--accent-rgb), 0.05)
+  );
+}
+
+.glass::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.09);
+}
+
+.glass > * {
+  position: relative;
+  z-index: 2;
+}
+
+.cta__offer,
+.cta__form {
+  padding: clamp(1.6rem, 3vw, 2.6rem);
+}
+
+/* The collection cards are glass too, but they are positioned by the gallery
+   recipe. Out-specify .glass so nothing re-centres them. */
+.vcard.glass {
+  position: absolute;
+  padding: 0;
+  background: rgba(16, 12, 9, 0.72);
+}
+
+.vcard.glass::before {
+  background: linear-gradient(
+    150deg,
+    rgba(255, 255, 255, 0.07),
+    transparent 44%,
+    rgba(var(--accent-rgb), 0.07)
+  );
+}
+
+@media (max-width: 1024px), (hover: none), (prefers-reduced-motion: reduce) {
+  .vcard.glass {
+    position: relative;
+  }
+}
+
+@media (pointer: coarse) {
+  .btn {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav__links a {
+    padding: 0.55rem 0;
+  }
+}

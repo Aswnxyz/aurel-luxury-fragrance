@@ -1,0 +1,22 @@
+{
+  "name": "aurel-perfumes",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "AUREL — Composed in shadow, worn in light. Eau de Parfum.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "encode": "node scripts/encode-bg.mjs ../Assets/videos/aurel-hero.mp4",
+    "optimize-images": "node scripts/optimize-images.mjs"
+  },
+  "dependencies": {
+    "gsap": "^3.15.0",
+    "lenis": "^1.3.26"
+  },
+  "devDependencies": {
+    "ffmpeg-static": "^5.3.0",
+    "vite": "^8.3.1"
+  }
+}
