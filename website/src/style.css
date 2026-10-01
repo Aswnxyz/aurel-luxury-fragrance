@@ -89,19 +89,25 @@ a {
   inset: 0;
   width: 100%;
   height: 100%;
-  /* The flacon fills the whole height of the film, so a cover crop always
-     slices the cap off the top of the viewport. Narrow windows keep the
-     full-bleed cover (it already shows the whole frame height there); wide
-     ones fit the frame instead, so the bottle, cap included, stays on screen. */
-  object-fit: cover;
+  /* The film is 16:9 and the flacon fills its full height, so a cover crop on
+     any viewport narrower than 16:9 slices the cap off the top. Above 16:9 the
+     two fit modes render identically, which means `contain` is safe at every
+     ratio and the element background fills the letterbox in the page colour.
+     One continuous rule, no breakpoint, so two neighbouring window sizes no
+     longer frame the shot differently. No will-change either: nothing ever
+     transforms this element, and promoting a full-screen film to its own layer
+     only costs memory on a modest machine. */
+  object-fit: contain;
   object-position: center;
+  background: var(--bg);
   z-index: 0;
-  will-change: transform;
 }
 
-@media (min-aspect-ratio: 3/2) {
+/* Only a portrait window wants full bleed, where fitting the frame would leave
+   the film a thin band. Everything else keeps the whole frame, cap included. */
+@media (max-aspect-ratio: 3/4) {
   .bg-video {
-    object-fit: contain;
+    object-fit: cover;
   }
 }
 
@@ -109,16 +115,16 @@ a {
   position: fixed;
   inset: 0;
   z-index: 0;
-  background: center / cover no-repeat var(--surface);
+  /* Matte in the page colour, so the still frames exactly like the film does
+     and the letterbox is never a lighter band across the section. */
+  background: center / contain no-repeat var(--bg);
   opacity: 1;
   transition: opacity 0.6s ease;
 }
 
-/* Same rule as the film: on viewports wide enough that a cover crop would
-   clip the top of the flacon, fit the still instead of cropping it. */
-@media (min-aspect-ratio: 3/2) {
+@media (max-aspect-ratio: 3/4) {
   .mobile-poster {
-    background-size: contain;
+    background-size: cover;
   }
 }
 
@@ -574,11 +580,20 @@ body.video-failed .bg-video {
 .composition {
   position: relative;
   padding: clamp(6rem, 12vh, 10rem) var(--pad);
+  /* This is the only light chapter, so both its edges are a dark-to-ivory
+     change of exposure. The ivory ramps over a longer stretch with eased stops
+     than the dark chapters use, which turns the flip into a dissolve while
+     leaving the band itself exactly as opaque and as tall as before. */
   background: linear-gradient(
     to bottom,
     rgba(242, 235, 225, 0) 0%,
-    rgba(242, 235, 225, 0.94) 7%,
-    rgba(242, 235, 225, 0.94) 93%,
+    rgba(242, 235, 225, 0.12) 5%,
+    rgba(242, 235, 225, 0.62) 11%,
+    rgba(242, 235, 225, 0.94) 18%,
+    rgba(242, 235, 225, 0.94) 82%,
+    rgba(242, 235, 225, 0.93) 89%,
+    rgba(242, 235, 225, 0.62) 95%,
+    rgba(242, 235, 225, 0.12) 99%,
     rgba(242, 235, 225, 0) 100%
   );
   color: var(--ink);
@@ -821,6 +836,30 @@ body.video-failed .bg-video {
   position: relative;
   max-width: 34rem;
   text-shadow: var(--tshadow);
+}
+
+/* The photograph runs full bleed and the section clips it, so it used to arrive
+   and leave on a hard horizontal line while every other chapter dissolved. The
+   top and bottom of the picture now sink back toward the page across the same
+   stretch the neighbouring chapters fade over. The edge stop is 0.72 rather
+   than solid, which is about how dark the film already is at that point on
+   screen, so the two sides meet at the same exposure instead of stepping. Sits
+   above the media and its scrim (both z-index -1) and below the copy. */
+.materials::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(14, 10, 7, 0.72) 0%,
+    rgba(14, 10, 7, 0.34) 7%,
+    rgba(14, 10, 7, 0) 21%,
+    rgba(14, 10, 7, 0) 79%,
+    rgba(14, 10, 7, 0.34) 93%,
+    rgba(14, 10, 7, 0.72) 100%
+  );
 }
 
 /* The section scrim is a right-edge wash, so the first words of every line
@@ -1345,7 +1384,13 @@ body.video-failed .bg-video {
 
 /* ------------------------------------------------------------- responsive */
 
-@media (max-width: 1024px), (hover: none), (prefers-reduced-motion: reduce) {
+/* Touch needs both traits before it counts as touch-only. `(hover: none)` alone
+   is true on plenty of touchscreen laptops, which was enough to flatten the
+   gallery to a stacked list on a machine that had plenty of room for it. Keep
+   these two conditions in step with STATIC_HERO and NO_PIN in main.js. */
+@media (max-width: 1024px),
+  (hover: none) and (pointer: coarse),
+  (prefers-reduced-motion: reduce) {
   .collection__pin {
     grid-template-columns: 1fr;
     min-height: auto;
@@ -1423,7 +1468,9 @@ body.video-failed .bg-video {
   }
 }
 
-@media (max-width: 768px), (hover: none), (prefers-reduced-motion: reduce) {
+@media (max-width: 768px),
+  (hover: none) and (pointer: coarse),
+  (prefers-reduced-motion: reduce) {
   .bg-video {
     display: none;
   }

@@ -18,13 +18,17 @@ gsap.registerPlugin(ScrollTrigger);
 const base = import.meta.env.BASE_URL || "/";
 const asset = (file) => `${base}${file}`;
 
-/* These two strings must match the CSS media queries in style.css and
-   glass.css, character for character. */
+/* A device only counts as touch-only when it fails both traits. `(hover: none)`
+   on its own is true on plenty of touchscreen laptops, and that was enough to
+   switch the film, the pins and the gallery off on a perfectly capable machine:
+   the hero sat on the poster and nothing scrubbed. These two strings must match
+   the media queries in style.css and glass.css, character for character. */
+const TOUCH_ONLY = "(hover: none) and (pointer: coarse)";
 const STATIC_HERO = matchMedia(
-  "(max-width: 768px), (hover: none), (prefers-reduced-motion: reduce)",
+  `(max-width: 768px), ${TOUCH_ONLY}, (prefers-reduced-motion: reduce)`,
 );
 const NO_PIN = matchMedia(
-  "(max-width: 1024px), (hover: none), (prefers-reduced-motion: reduce)",
+  `(max-width: 1024px), ${TOUCH_ONLY}, (prefers-reduced-motion: reduce)`,
 );
 const REDUCED = matchMedia("(prefers-reduced-motion: reduce)");
 
@@ -48,6 +52,42 @@ const posterEl = document.querySelector(".mobile-poster");
 let seekBusy = false;
 let pendingTime = null;
 let lastVideoT = -1;
+let seekTimer = null;
+/* Whether the current viewport should be running the film at all. It separates a
+   film that failed to load from a film that was put away on purpose when the
+   window crossed the breakpoint, so tearing the film down never leaves the page
+   convinced the video is broken. */
+let filmWanted = false;
+
+/* A browser only answers a seek with `seeked` once the decoder has produced the
+   frame. On a slower GPU that can take noticeably longer than a frame, and if
+   the answer never arrives the gate below would stay locked for good and the
+   film would stop responding to the scroll. The timer is the release valve. */
+const SEEK_TIMEOUT = 400;
+
+function writeSeek(t) {
+  seekBusy = true;
+  lastVideoT = t;
+  clearTimeout(seekTimer);
+  seekTimer = setTimeout(releaseSeek, SEEK_TIMEOUT);
+  try {
+    bgVideo.currentTime = t;
+  } catch {
+    releaseSeek();
+  }
+}
+
+/** Frees the gate and immediately retries the newest target, if there is one. */
+function releaseSeek() {
+  clearTimeout(seekTimer);
+  seekTimer = null;
+  seekBusy = false;
+  if (pendingTime !== null) {
+    const t = pendingTime;
+    pendingTime = null;
+    writeSeek(t);
+  }
+}
 
 function requestSeek(t) {
   if (!bgVideo.duration) return;
@@ -56,26 +96,15 @@ function requestSeek(t) {
     pendingTime = t; // coalesce to the newest target
     return;
   }
-  seekBusy = true;
-  lastVideoT = t;
-  try {
-    bgVideo.currentTime = t;
-  } catch {
-    seekBusy = false;
-    pendingTime = null;
-  }
+  writeSeek(t);
 }
 
-bgVideo.addEventListener("seeked", () => {
-  seekBusy = false;
-  if (pendingTime !== null) {
-    const t = pendingTime;
-    pendingTime = null;
-    requestSeek(t);
-  }
-});
+bgVideo.addEventListener("seeked", releaseSeek);
 
 function videoFailed() {
+  if (!filmWanted) return;
+  clearTimeout(seekTimer);
+  seekTimer = null;
   seekBusy = false;
   pendingTime = null;
   document.body.classList.remove("video-ready");
@@ -88,6 +117,12 @@ bgVideo.addEventListener("error", videoFailed);
 
 /** Pinned sections hold the film back so it lingers where copy is densest. */
 const slowZones = [];
+
+/** Drops a pin's zone, so a trigger that has been killed stops shaping time. */
+function dropZone(trigger) {
+  const i = slowZones.findIndex((zone) => zone.trigger === trigger);
+  if (i > -1) slowZones.splice(i, 1);
+}
 
 /**
  * Convert raw scroll position into the position the film should be at.
@@ -119,40 +154,101 @@ function effectiveScroll(y) {
   return out;
 }
 
+/**
+ * The furthest the page can travel, read from the document.
+ *
+ * Lenis answers `limit` from cached dimensions that it only recalculates on a
+ * debounce, and ScrollTrigger adds several viewport-heights of pin spacer after
+ * that read has happened. Dividing by the short value made the film reach its
+ * last frame before the page did and then sit still for the rest of the scroll.
+ * The error is a multiple of the pin heights, which are viewport-height
+ * multiples, so how wrong it got changed with the screen. The live document has
+ * no such gap.
+ */
+function maxScroll() {
+  const doc = document.scrollingElement || document.documentElement;
+  return Math.max(1, doc.scrollHeight - window.innerHeight);
+}
+
 function scrubVideo() {
   if (!bgVideo.duration) return;
-  const total = effectiveScroll(Math.max(1, lenis.limit));
+  const total = effectiveScroll(maxScroll());
   if (!Number.isFinite(total) || total <= 0) return;
   const p = clamp(0, 1, effectiveScroll(window.scrollY) / total);
   requestSeek(p * (bgVideo.duration - 0.05));
 }
 
-async function initVideo() {
-  if (posterEl) {
-    posterEl.style.backgroundImage = `url("${asset("img/poster.jpg")}")`;
-  }
-  // Phones and reduced motion get the composed still frame and never a byte
-  // of video.
-  if (STATIC_HERO.matches) return;
+let filmRunning = false;
+let filmOffScroll = null;
+
+/** Loads the film as a Blob and wires it to the scroll. Idempotent. */
+async function startFilm() {
+  if (filmRunning) return;
+  filmRunning = true;
   try {
     const res = await fetch(asset("bg.mp4"));
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    bgVideo.src = URL.createObjectURL(await res.blob());
+    const blob = await res.blob();
+    // The window may have crossed the breakpoint while the film downloaded.
+    if (!filmRunning) return;
+    bgVideo.src = URL.createObjectURL(blob);
     bgVideo.load();
     bgVideo.addEventListener(
       "loadedmetadata",
       () => {
         scrubVideo();
+        document.body.classList.remove("video-failed");
         document.body.classList.add("video-ready");
       },
       { once: true },
     );
     bgVideo.addEventListener("error", videoFailed, { once: true });
-    lenis.on("scroll", scrubVideo);
+    filmOffScroll = lenis.on("scroll", scrubVideo);
   } catch {
     videoFailed();
   }
 }
+
+/** Releases the film so a resized or rotated window can fall back to the poster. */
+function stopFilm() {
+  if (!filmRunning) return;
+  filmRunning = false;
+  document.body.classList.remove("video-ready");
+  filmOffScroll?.();
+  filmOffScroll = null;
+  clearTimeout(seekTimer);
+  seekTimer = null;
+  seekBusy = false;
+  pendingTime = null;
+  lastVideoT = -1;
+  // Dropping the source releases the decoded frames. The resulting error event
+  // is ignored, because filmWanted is already false by the time it lands.
+  bgVideo.removeAttribute("src");
+  bgVideo.load();
+}
+
+function applyHeroMode() {
+  filmWanted = !STATIC_HERO.matches;
+  if (filmWanted) {
+    startFilm();
+  } else {
+    stopFilm();
+  }
+}
+
+function initVideo() {
+  if (posterEl) {
+    posterEl.style.backgroundImage = `url("${asset("img/poster.jpg")}")`;
+  }
+  // Phones, tablets and reduced-motion visitors keep the composed still frame
+  // and never download a byte of video.
+  applyHeroMode();
+}
+
+/* The gates used to be read once, here. CSS media queries keep re-evaluating
+   themselves, so a rotate or a resized window left the script and the
+   stylesheet disagreeing about whether the film was running. */
+STATIC_HERO.addEventListener("change", applyHeroMode);
 
 initVideo();
 
@@ -199,7 +295,7 @@ function setupImpact() {
   // Touch and reduced-motion devices get the reveal without the pin: the
   // statement un-blurs as the section passes instead of holding the page.
   if (STATIC_HERO.matches) {
-    return ScrollTrigger.create({
+    const trigger = ScrollTrigger.create({
       trigger: section,
       start: "top 85%",
       end: "bottom 45%",
@@ -207,6 +303,7 @@ function setupImpact() {
       invalidateOnRefresh: true,
       onUpdate: (self) => render(self.progress),
     });
+    return { dispose: () => trigger.kill() };
   }
 
   const trigger = ScrollTrigger.create({
@@ -220,7 +317,12 @@ function setupImpact() {
   });
 
   slowZones.push({ trigger, k: 0.18 });
-  return trigger;
+  return {
+    dispose: () => {
+      dropZone(trigger);
+      trigger.kill();
+    },
+  };
 }
 
 /* ---------------------------------------------------- the collection gallery */
@@ -267,8 +369,6 @@ function setupGallery() {
 
   render(0);
 
-  if (NO_PIN.matches) return null;
-
   const trigger = ScrollTrigger.create({
     trigger: section,
     start: "top top",
@@ -280,7 +380,16 @@ function setupGallery() {
   });
 
   slowZones.push({ trigger, k: 0.18 });
-  return trigger;
+  return {
+    dispose: () => {
+      dropZone(trigger);
+      trigger.kill();
+      cards.forEach((el) => {
+        el.style.cssText = "";
+      });
+      if (counter) counter.textContent = "01";
+    },
+  };
 }
 
 /* ---------------------------------------------------------------- parallax */
@@ -437,18 +546,44 @@ function setupVisibility() {
 
 /* ------------------------------------------------------------------ build */
 
-setupImpact();
-setupGallery();
+let impact = null;
+let gallery = null;
+
+/** Rebuilds whichever pin the current viewport wants, dropping the other. */
+function applyPins() {
+  impact?.dispose();
+  impact = setupImpact();
+  gallery?.dispose();
+  gallery = setupGallery();
+}
+
+impact = setupImpact();
+gallery = setupGallery();
 setupParallax();
 setupReveals();
 setupChrome();
 setupForm();
 setupVisibility();
 
+/* Both gates move with the viewport, and CSS re-evaluates on its own, so a
+   rotate or a resized window has to rebuild the pins here too. */
+NO_PIN.addEventListener("change", applyPins);
+STATIC_HERO.addEventListener("change", applyPins);
+
+/* Every refresh, from any source: fonts landing, the window resizing, a pin
+   being rebuilt. Lenis measures the document on a debounce, so it is told to
+   re-measure before the film is mapped again, or the film is divided by a
+   scroll range the page has already outgrown. */
+ScrollTrigger.addEventListener("refresh", () => {
+  lenis.resize();
+  scrubVideo();
+});
+
 const refresh = () => ScrollTrigger.refresh();
 if (document.fonts?.ready) document.fonts.ready.then(refresh);
 window.addEventListener("load", refresh);
 window.addEventListener("resize", () => {
+  lenis.resize();
   scrubVideo();
 });
 

@@ -64,7 +64,9 @@
   );
 }
 
-@media (max-width: 1024px), (hover: none), (prefers-reduced-motion: reduce) {
+@media (max-width: 1024px),
+  (hover: none) and (pointer: coarse),
+  (prefers-reduced-motion: reduce) {
   .vcard.glass {
     position: relative;
   }
