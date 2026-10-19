@@ -2,7 +2,7 @@
 
 Composed in shadow, worn in light.
 
-A scroll-driven showcase for AUREL, a Paris house of three eaux de parfum:
+A scroll-driven concept for AUREL, a fictional Paris house of three eaux de parfum:
 **Élan** for daylight, **Noctis** for night, **Sombre** for the hours in
 between.
 
@@ -44,7 +44,7 @@ the film falls back to the still frame on purpose.
   with `index.html` at the top level. Uploading the `dist` folder itself shows
   a directory listing instead of the site.
 - The relative base (`base: "./"`) means the site works at a domain root or in
-  a subfolder. It has been verified in a subfolder.
+  a subfolder. Verify asset loading at the chosen deployment path.
 
 ## Processed media
 
@@ -66,7 +66,7 @@ app with the message addressed to:
 studio@aurel-parfums.com
 ```
 
-So the message ends up in the visitor's outbox, and they press send. If you
+This opens a draft in a configured mail app; the visitor must send it. The website cannot confirm delivery. If you
 want it delivered without a mail app, the form needs a real endpoint (Formspree,
 a hostinger form handler, or your own API) and the `setupForm` function in
 `src/main.js` is the single place to change.
@@ -90,7 +90,7 @@ a hostinger form handler, or your own API) and the `setupForm` function in
 - The source is all-keyframe H.264, so every frame is seekable.
 - Scroll maps to film progress across the whole page. The two pinned sections
   act as slow zones at 0.18×, so the film lingers where the copy is densest.
-- Phones, touch devices and `prefers-reduced-motion` get the composed still
+- Narrow screens, touch-only devices and `prefers-reduced-motion` get the composed still
   frame and never download the video at all.
 
 ## Layout
